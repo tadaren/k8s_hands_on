@@ -1,0 +1,27 @@
+variant: fcos
+version: 1.5.0
+passwd:
+  users:
+    - name: core
+      password_hash: $6$OTTfaYRr0ZM1p3NQ$5zXK66t1Jbb8xXwsLL1FPXjk8Kg6vfbBOyQ/ncjWTUiRygXoojK8ZivPWahIp./lofAwOFSPk.oBQSkSxsw7B.
+      ssh_authorized_keys:
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAa1N4rTYfz23TTK3OZX++AtFWQZOTd3G+gQyQeEBJcJ
+storage:
+  files:
+    - path: /etc/hostname
+      overwrite: true
+      contents:
+        inline: ${hostname}
+    - path: /etc/sysctl.d/90-sysrq.conf
+      contents:
+        inline: |
+          net.ipv4.ip_forward=1
+    - path: /etc/sysctl.d/reverse-path-filter.conf
+      contents:
+        inline: |
+          net.ipv4.conf.all.rp_filter=1
+    - path: /etc/systemd/system/containerd.service.d/override.conf
+      contents:
+        inline: |
+          [Service]
+          LimitNOFILE=1048576
