@@ -7,4 +7,5 @@ variable "esxi_username" {
 }
 
 variable "esxi_password" {
+  sensitive = true
 }
