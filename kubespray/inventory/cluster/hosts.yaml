@@ -1,13 +1,13 @@
 all:
   hosts:
     k8s_test_master:
-      ansible_host: 10.98.10.11
-      ip: 10.98.10.11
-      access_ip: 10.98.10.11
+      ansible_host: 172.16.0.17
+      ip: 172.16.0.17
+      access_ip: 172.16.0.17
     k8s_test_worker:
-      ansible_host: 10.98.10.21
-      ip: 10.98.10.21
-      access_ip: 10.98.10.21
+      ansible_host: 172.16.0.18
+      ip: 172.16.0.18
+      access_ip: 172.16.0.18
   children:
     kube_control_plane:
       hosts:
