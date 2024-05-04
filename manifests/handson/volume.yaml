@@ -1,0 +1,59 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: test-pv
+
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /mnt/data/vol1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - k8stestworker
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: local-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-storage
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+spec:
+    containers:
+      - name: test-pod
+        image: ubuntu
+        volumeMounts:
+          - mountPath: "/mnt/data"
+            name: test-volume
+        command: ["sleep", "1000000"]
+    volumes:
+        - name: test-volume
+          persistentVolumeClaim:
+            claimName: local-claim
